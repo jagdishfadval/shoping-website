@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Insertion</title>
+</head>
+<body>
+    <h2>Insert Product</h2>
+    <form action="insert_product.php" method="post" enctype="multipart/form-data">
+        <label for="product_name">Product Name:</label>
+        <input type="text" name="product_name" id="product_name" required><br>
+
+
+        <label for="category_id">Category:</label>
+        <select name="category_id" id="category_id" required>
+            <?php
+            // Database credentials
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "ecom";
+        
+            // Create connection
+            $conn = new mysqli($servername, $username, $password, $dbname);
+        
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+        
+            // Fetch categories from the Categories table
+            $sql = "SELECT category_id, category_name FROM categories";
+            $result = $conn->query($sql);
+            echo $result[0];
+            if ($result === false) {
+                echo "Error: " . $conn->error;
+            } else {
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo '<option value="' . $row["category_id"] . '">' . $row["category_name"] . '</option>';
+                    }
+                } else {
+                    echo '<option value="">No categories found</option>';
+                }
+            }
+            
+            $conn->close();
+            ?>
+        </select><br>
+
+        <label for="price">Price:</label>
+        <input type="number" name="price" id="price" required><br>
+
+        <label for="stock_quantity">Stock Quantity:</label>
+        <input type="number" name="stock_quantity" id="stock_quantity" required><br>
+
+        <label for="description">Description:</label>
+        <textarea name="description" id="description" required></textarea><br>
+
+        <label for="images">Images:</label>
+        <input type="file" name="images[]" id="images" multiple><br>
+
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
